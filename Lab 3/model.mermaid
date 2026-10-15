@@ -1,0 +1,42 @@
+sequenceDiagram
+    autonumber
+    actor Manager as 👤 SalesManager
+    participant Controller as 🌐 DealController
+    participant Service as ⚙️ DealService
+    participant Pricing as 🧮 PricingService
+    participant ProdRepo as 📦 ProductRepository
+    participant DealRepo as 💾 DealRepository
+    participant Email as ✉️ EmailService
+
+    Manager ->> Controller: POST /deals/{deal_id}/items (items_payload)
+    Controller ->> Service: addItemsToDeal(deal_id, items_payload)
+
+    %% Цикл по товарах (з дефектом D-03: назви itemId, cost)
+    loop Для кожного товару в специфікації
+        Service ->> ProdRepo: findById(itemId)
+        ProdRepo -->> Service: Product(name, base_price, is_active)
+        %% Блок перевірки (з дефектом D-02: відсутня гілка else)
+        alt is_active == true
+            Note over Service: Формування DealItem з фіксацією ціни
+        end
+    end
+
+    %% Розрахунок вартості (з дефектом D-01: відсутня return-стрілка та типізація)
+    Service ->> Pricing: calculate(items)
+
+    opt Загальна сума > 100 000 грн (EARS-OPT-01)
+        Service ->> Pricing: applyDiscount(subtotal, 0.10)
+        Pricing -->> Service: discounted_total
+    end
+
+    %% Збереження (з дефектом D-01: відсутня return-стрілка)
+    Service ->> DealRepo: saveItems(deal_id, items)
+    Service ->> DealRepo: updateTotal(deal_id, total_amount)
+    DealRepo -->> Service: Deal(status, total_amount)
+
+    %% Асинхронна відправка комерційної пропозиції
+    Service ->> Email: sendProposal(client_email, proposal_data)
+    Email -->> Service: 200 OK
+
+    Service -->> Controller: DealResponseDTO
+    Controller -->> Manager: 200 OK (Специфікація успішно сформована)
