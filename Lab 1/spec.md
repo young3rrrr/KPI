@@ -115,7 +115,7 @@ erDiagram
 
     Lead |o--o| Client : "converts_to"
 
-    Client |o--o{ Deal : "places"
+    Client ||--o{ Deal : "places"
     Client ||--o{ Activity : "has"
 
     Deal }|..|{ Product : "orders"
