@@ -69,7 +69,10 @@ sequenceDiagram
         Service ->> ProdRepo: findById(itemId)
         ProdRepo -->> Service: Product(name, base_price, is_active)
         alt is_active == true
-            Note over Service: Формування DealItem з фіксацією ціни
+            Note over Service: Створення DealItem з actual_price = base_price
+        else is_active == false або товар не знайдено
+            Service -->> Controller: 400 Bad Request (Product Inactive)
+            Controller -->> Manager: 400 Помилка: Товар недоступний для замовлення
         end
     end
 
