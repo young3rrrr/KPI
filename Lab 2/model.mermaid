@@ -1,0 +1,34 @@
+flowchart LR
+    %% Актори системи
+    SalesManager["👤 SalesManager<br/>(Менеджер з продажів)"]
+    Admin["👤 Admin<br/>(Адміністратор)"]
+    EmailService["💻 EmailService<br/>(Поштовий шлюз)"]
+    SchedulerService["⏱️ SchedulerService<br/>(Планувальник задач)"]
+
+    %% Генералізація акторів
+    Admin -- "узагальнення" ---|> SalesManager
+
+    %% Межі системи OpenCRM
+    subgraph OpenCRM ["Система OpenCRM"]
+        UC1(["UC-1: Кваліфікувати ліда та створити клієнта"])
+        UC2(["UC-2: Вести угоду та воронку продажів"])
+        UC3(["UC-3: Додати позиції OrderItem до угоди"])
+        UC4(["UC-4: Розрахувати підсумкову вартість угоди"])
+        UC5(["UC-5: Застосувати спеціальну знижку"])
+        UC6(["UC-6: Надіслати комерційну пропозицію"])
+        UC7(["UC-7: Моніторити дедлайни задач CRMTask"])
+    end
+
+    %% Взаємодії акторів із прецедентами
+    SalesManager --> UC1
+    SalesManager --> UC2
+    SchedulerService --> UC7
+
+    %% Зв'язки між прецедентами (Базова версія з дефектом D-01: <<extend>> для UC4)
+    UC2 -. "<<include>>" .-> UC3
+    UC2 -. "<<extend>>" .-> UC4
+    UC2 -. "<<extend>>" .-> UC5
+    UC2 -. "<<extend>>" .-> UC6
+
+    %% Взаємодія з зовнішнім сервісом
+    UC6 --> EmailService
