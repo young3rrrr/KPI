@@ -1,0 +1,46 @@
+# Операційні системи
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Редактори та IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+*~
+
+# Логи та тимчасові файли
+*.log
+*.tmp
+*.bak
+.cache/
+
+# Node / JS
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+.venv/
+venv/
+env/
+
+# Локальні та тимчасові файли оточення
+.env
+.env.local
+.gemini/
+scratch/
+
+# Завдання лабораторних робіт (файли завдань у корені завжди ігноруються)
+/Lab*.md
+/Lab_*.md
+/lab*.md
+/lab_*.md
+
+# Додаткові файли, які не повинні потрапляти до репозиторію
+/Agents.md
