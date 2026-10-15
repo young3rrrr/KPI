@@ -66,10 +66,10 @@ sequenceDiagram
     Controller ->> Service: addItemsToDeal(deal_id, items_payload)
 
     loop Для кожного товару в специфікації
-        Service ->> ProdRepo: findById(itemId)
+        Service ->> ProdRepo: findById(product_id: string): Product
         ProdRepo -->> Service: Product(name, base_price, is_active)
         alt is_active == true
-            Note over Service: Створення DealItem з actual_price = base_price
+            Note over Service: Створення DealItem(deal_id, product_id, quantity, actual_price)
         else is_active == false або товар не знайдено
             Service -->> Controller: 400 Bad Request (Product Inactive)
             Controller -->> Manager: 400 Помилка: Товар недоступний для замовлення
@@ -91,8 +91,8 @@ sequenceDiagram
     Service ->> DealRepo: updateDealTotal(deal_id: string, total_amount: number): Deal
     DealRepo -->> Service: Deal(status, total_amount)
 
-    Service ->> Email: sendProposal(client_email, proposal_data)
-    Email -->> Service: 200 OK
+    Service ->> Email: sendProposalEmail(client_email: string, proposal_pdf: Buffer): SendResult
+    Email -->> Service: 200 OK (Email Delivered)
 
     Service -->> Controller: DealResponseDTO
     Controller -->> Manager: 200 OK (Специфікація успішно сформована)
