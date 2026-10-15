@@ -1,0 +1,69 @@
+erDiagram
+    User ||--o{ Lead : "manages"
+    User ||--o{ Deal : "responsible_for"
+    User ||--o{ Activity : "assigned_to"
+
+    Lead |o--o| Client : "converts_to"
+
+    Client |o--o{ Deal : "places"
+    Client ||--o{ Activity : "has"
+
+    Deal }|..|{ Product : "orders"
+    Deal ||--o{ Activity : "tracks"
+
+    User {
+        string id PK
+        string full_name
+        string email
+        string role
+        datetime created_at
+    }
+
+    Lead {
+        string id PK
+        string contact_name
+        string company_name
+        string phone
+        string email
+        string status
+        string assigned_to FK
+        string converted_client_id FK
+        datetime created_at
+    }
+
+    Client {
+        string id PK
+        string company_name
+        string contact_person
+        string phone
+        string email
+        datetime created_at
+    }
+
+    Deal {
+        string id PK
+        string client_id FK
+        string manager_id FK
+        string title
+        string status
+        number total_amount
+        datetime created_at
+        datetime updated_at
+    }
+
+    Product {
+        string id PK
+        string name
+        number base_price
+        boolean is_active
+    }
+
+    Activity {
+        string id PK
+        number user_id FK
+        string deal_id FK
+        string client_id FK
+        string activity_type
+        datetime due_date
+        boolean is_completed
+    }
