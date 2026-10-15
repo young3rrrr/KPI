@@ -101,7 +101,7 @@ flowchart LR
     SchedulerService --> UC7
 
     UC2 -. "<<include>>" .-> UC3
-    UC2 -. "<<extend>>" .-> UC4
+    UC2 -. "<<include>>" .-> UC4
     UC2 -. "<<extend>>" .-> UC5
     UC2 -. "<<extend>>" .-> UC6
 
