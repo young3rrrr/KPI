@@ -73,15 +73,19 @@ sequenceDiagram
         end
     end
 
-    Service ->> Pricing: calculate(items)
+    %% Розрахунок вартості
+    Service ->> Pricing: calculateSubtotal(items: DealItem[]): number
+    Pricing -->> Service: subtotal: number
 
     opt Загальна сума > 100 000 грн (EARS-OPT-01)
-        Service ->> Pricing: applyDiscount(subtotal, 0.10)
-        Pricing -->> Service: discounted_total
+        Service ->> Pricing: applyDiscount(subtotal: number, 0.10): number
+        Pricing -->> Service: discounted_total: number
     end
 
-    Service ->> DealRepo: saveItems(deal_id, items)
-    Service ->> DealRepo: updateTotal(deal_id, total_amount)
+    %% Збереження позицій та оновлення суми угоди
+    Service ->> DealRepo: saveDealItems(deal_id: string, items: DealItem[]): void
+    DealRepo -->> Service: void
+    Service ->> DealRepo: updateDealTotal(deal_id: string, total_amount: number): Deal
     DealRepo -->> Service: Deal(status, total_amount)
 
     Service ->> Email: sendProposal(client_email, proposal_data)
