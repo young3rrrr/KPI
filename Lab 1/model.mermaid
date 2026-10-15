@@ -8,8 +8,10 @@ erDiagram
     Client ||--o{ Deal : "places"
     Client ||--o{ Activity : "has"
 
-    Deal }|..|{ Product : "orders"
+    Deal ||--o{ DealItem : "contains"
     Deal ||--o{ Activity : "tracks"
+
+    Product ||--o{ DealItem : "included_in"
 
     User {
         string id PK
@@ -56,6 +58,14 @@ erDiagram
         string name
         number base_price
         boolean is_active
+    }
+
+    DealItem {
+        string id PK
+        string deal_id FK
+        string product_id FK
+        number quantity
+        number actual_price
     }
 
     Activity {
